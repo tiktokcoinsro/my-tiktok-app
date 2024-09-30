@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>TikTok Recharge Coins</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #181818; /* Dark background */
+            color: #fff; /* White text */
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #fe2c55; /* TikTok red */
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        #tiktok-logo {
+            width: 120px;
+            display: block;
+            margin: 20px auto;
+        }
+        .input-container {
+            margin: 10px 0;
+        }
+        input[type="text"] {
+            padding: 15px;
+            border-radius: 25px; /* Rounded edges */
+            border: 1px solid #ccc;
+            width: 80%;
+            max-width: 300px;
+            font-size: 1em;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            background-color: #2c2c2c; /* Dark input background */
+            color: #fff; /* White text */
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #fe2c55;
+            outline: none;
+        }
+        .coin-options {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .coin-option {
+            margin: 10px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: #3a3a3a; /* Dark option background */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+            font-size: 1.5em;
+            color: #fff; /* White text */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .coin-option:hover {
+            transform: scale(1.05);
+            background-color: #444; /* Lighter shade on hover */
+        }
+        input[type="radio"] {
+            display: none; /* Hide radio buttons */
+        }
+        input[type="radio"]:checked + .coin-option {
+            background-color: #39ff14; /* Neon green */
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.8);
+        }
+        button {
+            background-color: #fe2c55; /* TikTok red */
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px; /* Rounded edges */
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #ff5c83; /* Lighter red on hover */
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background-color: #2c2c2c; /* Popup background */
+            border: 2px solid #fe2c55;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+            z-index: 10;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .popup.show {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            animation: pop 0.3s ease forwards;
+        }
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 5;
+        }
+        #balance-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            background-color: #fe2c55; /* TikTok red */
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 1.2em;
+        }
+        #balance {
+            font-weight: bold;
+        }
+        #deduction {
+            font-size: 1em;
+            color: yellow; /* Yellow for deduction */
+            margin-top: 5px;
+        }
+        .custom-amount {
+            margin-top: 20px;
+        }
+        .custom-amount input {
+            width: 50%;
+            max-width: 150px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            background-color: #2c2c2c; /* Dark background for input */
+            color: #fff; /* White text */
+        }
+        .custom-popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background-color: #2c2c2c;
+            border: 2px solid #fe2c55;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+            z-index: 10;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .custom-popup.show {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            animation: pop 0.3s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok Logo" id="tiktok-logo">
+    <h1>TikTok Recharge Coins</h1>
+    
+    <div id="balance-container">
+        <div id="balance">Sold: 2,431,231 💰</div>
+        <div id="deduction"></div>
+    </div>
+    
+    <form onsubmit="return showMessage()">
+        <div class="input-container">
+            <input type="text" id="username" placeholder="@username" required>
+        </div>
+        
+        <h2>Selectați monede:</h2>
+        <div class="coin-options">
+            <label>
+                <input type="radio" name="coins" value="1999" required>
+                <span class="coin-option">1,999 💰</span>
+            </label>
+            <label>
+                <input type="radio" name="coins" value="2599">
+                <span class="coin-option">2,599 💰</span>
+            </label>
+            <label>
+                <input type="radio" name="coins" value="4499">
+                <span class="coin-option">4,499 💰</span>
+            </label>
+            <label>
+                <input type="radio" name="coins" value="15499">
+                <span class="coin-option">15,499 💰</span>
+            </label>
+        </div>
+        
+        <div class="custom-amount">
+            <button type="button" onclick="showCustomAmountPopup()">Introducere sumă personalizată</button>
+        </div>
+        
+        <button type="submit">Trimite</button>
+    </form>
+    
+    <div id="message"></div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <h2 id="popup-message"></h2>
+        <p>Monedele tale vor intra în 15-30 minute.</p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+
+    <div class="overlay" id="custom-overlay"></div>
+    <div class="custom-popup" id="custom-amount-popup">
+        <h2>Introducere sumă personalizată</h2>
+        <input type="number" id="custom-amount" placeholder="Suma dorită" min="1">
+        <button onclick="submitCustomAmount()">OK</button>
+        <button onclick="closeCustomAmountPopup()">Anulează</button>
+    </div>
+
+    <script>
+        let balance = 2431231; // Sold inițial
+
+        function showMessage() {
+            const username = document.getElementById('username').value;
+            if (!username.startsWith('@')) {
+                alert('Vă rugăm să introduceți un nume de utilizator valid care începe cu "@"');
+                return false;
+            }
+
+            const coinAmount = parseInt(document.querySelector('input[name="coins"]:checked').value);
+            balance -= coinAmount;
+
+            document.getElementById('balance').innerText = `Sold: ${balance.toLocaleString()} 💰`;
+            document.getElementById('deduction').innerText = `- ${coinAmount.toLocaleString()} 💰`;
+
+            document.getElementById('popup-message').innerText = `${username}, ai primit ${coinAmount} monede câștigate! 💰`;
+            showPopup();
+            return false;
+        }
+
+        function showPopup() {
+            document.getElementById('overlay').style.display = 'block';
+            const popup = document.getElementById('popup');
+            popup.classList.add('show');
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('popup');
+            popup.classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('overlay').style.display = 'none';
+            }, 300);
+            setTimeout(() => {
+                document.getElementById('deduction').innerText = '';
+            }, 3000);
+        }
+
+        function showCustomAmountPopup() {
+            document.getElementById('custom-overlay').style.display = 'block';
+            const customPopup = document.getElementById('custom-amount-popup');
+            customPopup.classList.add('show');
+        }
+
+        function closeCustomAmountPopup() {
+            const customPopup = document.getElementById('custom-amount-popup');
+            customPopup.classList.remove('show');
+            document.getElementById('custom-overlay').style.display = 'none';
+        }
+
+        function submitCustomAmount() {
+            const customAmount = parseInt(document.getElementById('custom-amount').value);
+            if (!isNaN(customAmount) && customAmount > 0) {
+                balance -= customAmount;
+
+                document.getElementById('balance').innerText = `Sold: ${balance.toLocaleString()} 💰`;
+                document.getElementById('deduction').innerText = `- ${customAmount.toLocaleString()} 💰`;
+
+                const username = document.getElementById('username').value;
+                document.getElementById('popup-message').innerText = `${username}, ai primit ${customAmount} monede câștigate! 💰`;
+                showPopup();
+                closeCustomAmountPopup();
+            } else {
+                alert('Vă rugăm să introduceți o sumă validă!');
+            }
+        }
+    </script>
+</body>
+</html>
